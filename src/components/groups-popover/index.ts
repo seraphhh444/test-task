@@ -12,11 +12,13 @@ export type GroupsPopoverApi = {
 }
 
 type CreateGroupsPopoverOptions = {
+  onAddGroupClick?: () => void
   groups?: Group[]
   onDeleteGroupClick?: (group: Group) => void
 }
 
 export function createGroupsPopover({
+  onAddGroupClick,
   groups = [],
   onDeleteGroupClick,
 }: CreateGroupsPopoverOptions = {}): GroupsPopoverApi {
@@ -66,6 +68,9 @@ export function createGroupsPopover({
   )
   const closeButton = root.querySelector<HTMLButtonElement>(
     `.${styles['groups-popover__close-button']}`,
+  )
+  const addButton = root.querySelector<HTMLButtonElement>(
+    `.${styles['groups-popover__action-button']}`,
   )
   const groupsList = root.querySelector<HTMLUListElement>(
     `.${styles['groups-popover__groups-list']}`,
@@ -124,6 +129,9 @@ export function createGroupsPopover({
 
   closeButton?.addEventListener('click', close)
   backdrop?.addEventListener('click', close)
+  addButton?.addEventListener('click', () => {
+    onAddGroupClick?.()
+  })
   groupsList?.addEventListener('click', (event) => {
     const target = event.target
 

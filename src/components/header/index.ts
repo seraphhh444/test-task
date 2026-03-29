@@ -4,6 +4,8 @@ import { ContactsService } from '@/services/contacts-service'
 import { createDeleteGroupModal } from '@/components/delete-group-modal'
 import { createGroupsPopover } from '@/components/groups-popover'
 import { createLabel } from '@/components/label'
+import { createToast } from '@/components/toast'
+import { DuplicateEntityError } from '@/services/duplicate-entity-error'
 import { GroupsService } from '@/services/groups-service'
 import { createElement } from '@/utils/create-element'
 import styles from './header.module.scss'
@@ -31,19 +33,44 @@ export function createHeader({
   const groupsControl = createElement('div', {
     className: styles['header__groups-control'],
   })
+  const toast = createToast()
   const addContactPopover = createAddContactPopover({
     groups: groupsService.getGroups(),
     onSubmit: ({ groupId, name, phone }) => {
-      contactsService.addContact({
-        groupId,
-        name,
-        phone,
-      })
-      onContactsChange?.()
+      try {
+        contactsService.addContact({
+          groupId,
+          name,
+          phone,
+        })
+        toast.show('Контакт успешно создан', 'success')
+        onContactsChange?.()
+      } catch (error) {
+        if (error instanceof DuplicateEntityError) {
+          toast.show(error.message, 'error')
+        }
+      }
     },
   })
   const groupsPopover = createGroupsPopover({
     groups: groupsService.getGroups(),
+    onAddGroupClick: () => {
+      const groupName = window.prompt('Введите название группы')
+
+      if (!groupName?.trim()) {
+        return
+      }
+
+      try {
+        groupsService.addGroup(groupName)
+        renderGroups()
+        toast.show('Группа успешно создана', 'success')
+      } catch (error) {
+        if (error instanceof DuplicateEntityError) {
+          toast.show(error.message, 'error')
+        }
+      }
+    },
     onDeleteGroupClick: (group) => {
       deleteGroupModal.open(group)
     },
@@ -106,6 +133,7 @@ export function createHeader({
   groupsControl.append(groupsButton, groupsPopover.element)
   header.append(addContactPopover.element)
   header.append(deleteGroupModal.element)
+  header.append(toast.element)
   container.append(label, addContactButton, groupsControl)
   header.append(container)
 

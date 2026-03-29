@@ -1,0 +1,49 @@
+@use '@/styles/base/variables' as variables;
+
+.toast-root {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 209px;
+  min-height: 50px;
+  padding: 16px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.toast--error {
+  background: variables.$color-accent-primary;
+}
+
+.toast--success {
+  background: variables.$color-background-primary;
+}
+
+.toast__icon {
+  width: 16px;
+  height: 16px;
+}
+
+.toast__message {
+  font-size: variables.$font-size-text-sm;
+  line-height: variables.$line-height-text-sm;
+  font-weight: 400;
+}
+
+.toast--error .toast__message {
+  color: variables.$color-text-inverse;
+}
+
+.toast--success .toast__message {
+  color: variables.$color-text-primary;
+}

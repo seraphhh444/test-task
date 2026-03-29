@@ -1,5 +1,6 @@
 export type ContactFormValues = {
   name: string
+  phoneDigits: string
   phone: string
 }
 
@@ -15,6 +16,8 @@ export class ContactFormValidator {
 
     if (!values.phone.trim()) {
       errors.phone = 'Поле обязательно для заполнения'
+    } else if (values.phoneDigits.length < 11) {
+      errors.phone = 'Введите номер полностью'
     }
 
     return errors

@@ -1,4 +1,5 @@
 import { Group, type GroupData } from '@/entities/group'
+import { DuplicateEntityError } from '@/services/duplicate-entity-error'
 import { LocalStorageRepository } from '@/services/local-storage-repository'
 
 const DEFAULT_GROUP_NAMES = ['Друзья', 'Коллеги']
@@ -26,6 +27,24 @@ export class GroupsService {
 
   getGroups(): Group[] {
     return this.repository.read().map((group) => new Group(group))
+  }
+
+  addGroup(name: string): Group {
+    const normalizedName = name.trim()
+    const groups = this.repository.read()
+    const isDuplicate = groups.some(
+      (group) => group.name.trim().toLowerCase() === normalizedName.toLowerCase(),
+    )
+
+    if (isDuplicate) {
+      throw new DuplicateEntityError('Группа с таким названием уже существует')
+    }
+
+    const nextGroup = Group.create(normalizedName)
+
+    this.repository.write([...groups, nextGroup.toJSON()])
+
+    return nextGroup
   }
 
   deleteGroup(groupId: string): void {

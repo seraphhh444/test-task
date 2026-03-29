@@ -1,3 +1,4 @@
+import IMask from 'imask'
 import type { Group } from '@/entities/group'
 import { ContactFormValidator } from '@/services/contact-form-validator'
 import { createElement } from '@/utils/create-element'
@@ -133,6 +134,11 @@ export function createAddContactPopover({
   const pickerMenu = root.querySelector<HTMLElement>(
     `.${styles['add-contact-popover__picker-menu']}`,
   )
+  const phoneMask = phoneField
+    ? IMask(phoneField, {
+        mask: '+{7} (000) 000 - 00 - 00',
+      })
+    : null
 
   let selectedGroupId: string | null = null
 
@@ -235,6 +241,9 @@ export function createAddContactPopover({
 
   const resetForm = (): void => {
     form?.reset()
+    if (phoneMask) {
+      phoneMask.value = ''
+    }
     selectedGroupId = null
     clearFieldError('name')
     clearFieldError('phone')
@@ -273,7 +282,7 @@ export function createAddContactPopover({
     }
   })
   phoneField?.addEventListener('input', () => {
-    if (phoneField.value.trim()) {
+    if (phoneMask?.unmaskedValue.length === 11) {
       clearFieldError('phone')
     }
   })
@@ -309,8 +318,9 @@ export function createAddContactPopover({
 
     const formData = new FormData(form)
     const name = String(formData.get('name') ?? '').trim()
-    const phone = String(formData.get('phone') ?? '').trim()
-    const errors = validator.validate({ name, phone })
+    const phone = phoneMask?.value.trim() ?? String(formData.get('phone') ?? '').trim()
+    const phoneDigits = phoneMask?.unmaskedValue ?? ''
+    const errors = validator.validate({ name, phone, phoneDigits })
 
     setFieldError('name', errors.name)
     setFieldError('phone', errors.phone)

@@ -1,4 +1,5 @@
 import { Contact, type ContactData } from '@/entities/contact'
+import { DuplicateEntityError } from '@/services/duplicate-entity-error'
 import { LocalStorageRepository } from '@/services/local-storage-repository'
 
 type CreateContactPayload = {
@@ -19,6 +20,15 @@ export class ContactsService {
   }
 
   addContact(payload: CreateContactPayload): Contact {
+    const normalizedPhone = payload.phone.replace(/\D/g, '')
+    const hasDuplicatePhone = this.repository.read().some(
+      (contact) => contact.phone.replace(/\D/g, '') === normalizedPhone,
+    )
+
+    if (hasDuplicatePhone) {
+      throw new DuplicateEntityError('Контакт с таким номером уже существует')
+    }
+
     const nextContact = Contact.create(payload)
     const contacts = this.repository.read()
 
