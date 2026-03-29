@@ -24,6 +24,11 @@
 .header__add-contact-button {
   grid-area: add;
   width: 100%;
+  background-color: variables.$color-accent-primary;
+}
+
+.header__add-contact-button:hover {
+  background-color: variables.$color-accent-primary-hover;
 }
 
 .header__groups-control {

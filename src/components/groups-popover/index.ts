@@ -34,7 +34,11 @@ export function createGroupsPopover({
           class="${styles['groups-popover__close-button']}"
           aria-label="Закрыть поповер групп"
         >
-          <span class="${styles['groups-popover__close-icon']}"></span>
+          <img
+            class="${styles['groups-popover__close-icon']}"
+            src="/icons/close-popover-icon.svg"
+            alt=""
+          >
         </button>
       </div>
       <div class="${styles['groups-popover__content']}">
@@ -91,7 +95,11 @@ export function createGroupsPopover({
               aria-label="Удалить группу ${group.name}"
               data-group-id="${group.id}"
             >
-              <span class="${styles['groups-popover__delete-icon']}"></span>
+              <img
+                class="${styles['groups-popover__delete-icon']}"
+                src="/icons/delete-icon.svg"
+                alt=""
+              >
             </button>
           </li>
         `,

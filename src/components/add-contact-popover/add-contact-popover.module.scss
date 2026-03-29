@@ -1,0 +1,202 @@
+@use '@/styles/base/variables' as variables;
+
+.add-contact-popover-root {
+  position: fixed;
+  inset: 0;
+  z-index: 15;
+  display: none;
+}
+
+.add-contact-popover-root--open {
+  display: block;
+}
+
+.add-contact-popover-root__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.add-contact-popover {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  width: min(312px, 100vw);
+  min-height: 100dvh;
+  padding: 24px 24px 16px;
+  background: variables.$color-background-primary;
+}
+
+.add-contact-popover__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-inline: -24px;
+  padding-inline: 24px;
+  padding-bottom: 23px;
+  border-bottom: 1px solid variables.$color-background-neutral-subtle;
+}
+
+.add-contact-popover__title {
+  font-size: variables.$font-size-text-md;
+  line-height: variables.$line-height-text-md;
+  color: variables.$color-text-primary;
+}
+
+.add-contact-popover__close-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: variables.$color-background-primary;
+  cursor: pointer;
+}
+
+.add-contact-popover__close-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.add-contact-popover__form {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 24px;
+}
+
+.add-contact-popover__field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.add-contact-popover__field {
+  width: 100%;
+  min-height: 38px;
+  padding: 9px 12px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: variables.$color-background-secondary;
+  font-size: variables.$font-size-text-sm;
+  line-height: variables.$line-height-text-sm;
+  font-weight: 400;
+  color: variables.$color-text-primary;
+  outline: none;
+}
+
+.add-contact-popover__field::placeholder {
+  color: rgba(variables.$color-black, 0.5);
+}
+
+.add-contact-popover__field-group--error .add-contact-popover__field {
+  border-color: #ea3d2f;
+}
+
+.add-contact-popover__field-message {
+  min-height: 18px;
+  font-size: variables.$font-size-text-sm;
+  line-height: variables.$line-height-text-sm;
+  font-weight: 400;
+  color: #ea3d2f;
+}
+
+.add-contact-popover__group-trigger {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-right: 44px;
+  cursor: pointer;
+}
+
+.add-contact-popover__group-trigger::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  width: 24px;
+  height: 24px;
+  background: url('/icons/choose-group-icon.svg') center / 24px 24px no-repeat;
+  transform: translateY(-50%);
+}
+
+.add-contact-popover__group-trigger-text {
+  font-weight: 400;
+  color: rgba(variables.$color-black, 0.5);
+}
+
+.add-contact-popover__group-trigger-text--selected {
+  color: variables.$color-text-primary;
+}
+
+.add-contact-popover__group-field {
+  position: relative;
+}
+
+.add-contact-popover__group-field--open {
+  z-index: 1;
+}
+
+.add-contact-popover__picker {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 100%;
+}
+
+.add-contact-popover__picker-menu {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: 200px;
+  overflow: hidden;
+  border-radius: 6px;
+  background: #f2f2f2;
+}
+
+.add-contact-popover__group-option {
+  width: 100%;
+  min-height: 40px;
+  padding: 11px 12px;
+  border: none;
+  background: transparent;
+  font-size: variables.$font-size-text-sm;
+  line-height: variables.$line-height-text-sm;
+  font-weight: 400;
+  text-align: left;
+  color: variables.$color-text-primary;
+  cursor: pointer;
+}
+
+.add-contact-popover__group-option--active {
+  background: #e4e3e3;
+}
+
+.add-contact-popover__form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: auto;
+  padding-top: 24px;
+}
+
+.add-contact-popover__submit-button {
+  min-width: 104px;
+  min-height: 38px;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 6px;
+  background: variables.$color-brand-primary;
+  font-size: variables.$font-size-text-sm;
+  line-height: variables.$line-height-text-sm;
+  font-weight: variables.$font-weight-bold;
+  color: variables.$color-text-inverse;
+  cursor: pointer;
+}

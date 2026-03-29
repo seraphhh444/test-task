@@ -1,4 +1,6 @@
+import { createAddContactPopover } from '@/components/add-contact-popover'
 import { createButton } from '@/components/button'
+import { ContactsService } from '@/services/contacts-service'
 import { createDeleteGroupModal } from '@/components/delete-group-modal'
 import { createGroupsPopover } from '@/components/groups-popover'
 import { createLabel } from '@/components/label'
@@ -7,10 +9,16 @@ import { createElement } from '@/utils/create-element'
 import styles from './header.module.scss'
 
 type CreateHeaderOptions = {
+  contactsService: ContactsService
   groupsService: GroupsService
+  onContactsChange?: () => void
 }
 
-export function createHeader({ groupsService }: CreateHeaderOptions): HTMLElement {
+export function createHeader({
+  contactsService,
+  groupsService,
+  onContactsChange,
+}: CreateHeaderOptions): HTMLElement {
   const header = createElement('header', { className: styles.header })
   const container = createElement('div', {
     className: `container ${styles['header__container']}`,
@@ -23,6 +31,17 @@ export function createHeader({ groupsService }: CreateHeaderOptions): HTMLElemen
   const groupsControl = createElement('div', {
     className: styles['header__groups-control'],
   })
+  const addContactPopover = createAddContactPopover({
+    groups: groupsService.getGroups(),
+    onSubmit: ({ groupId, name, phone }) => {
+      contactsService.addContact({
+        groupId,
+        name,
+        phone,
+      })
+      onContactsChange?.()
+    },
+  })
   const groupsPopover = createGroupsPopover({
     groups: groupsService.getGroups(),
     onDeleteGroupClick: (group) => {
@@ -30,12 +49,17 @@ export function createHeader({ groupsService }: CreateHeaderOptions): HTMLElemen
     },
   })
   const renderGroups = (): void => {
-    groupsPopover.render(groupsService.getGroups())
+    const groups = groupsService.getGroups()
+
+    groupsPopover.render(groups)
+    addContactPopover.renderGroups(groups)
   }
   const deleteGroupModal = createDeleteGroupModal({
     onConfirm: (group) => {
+      contactsService.deleteContactsByGroup(group.id)
       groupsService.deleteGroup(group.id)
       renderGroups()
+      onContactsChange?.()
     },
   })
   const groupsButton = createButton({
@@ -46,9 +70,17 @@ export function createHeader({ groupsService }: CreateHeaderOptions): HTMLElemen
       groupsPopover.toggle()
     },
   })
+  addContactButton.addEventListener('click', (event) => {
+    event.stopPropagation()
+    renderGroups()
+    addContactPopover.open()
+  })
 
   renderGroups()
 
+  addContactPopover.element.addEventListener('click', (event) => {
+    event.stopPropagation()
+  })
   groupsPopover.element.addEventListener('click', (event) => {
     event.stopPropagation()
   })
@@ -65,9 +97,14 @@ export function createHeader({ groupsService }: CreateHeaderOptions): HTMLElemen
     if (event.key === 'Escape' && deleteGroupModal.isOpen()) {
       deleteGroupModal.close()
     }
+
+    if (event.key === 'Escape' && addContactPopover.isOpen()) {
+      addContactPopover.close()
+    }
   })
 
   groupsControl.append(groupsButton, groupsPopover.element)
+  header.append(addContactPopover.element)
   header.append(deleteGroupModal.element)
   container.append(label, addContactButton, groupsControl)
   header.append(container)

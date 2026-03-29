@@ -1,22 +1,20 @@
-import { createImage } from '@/components/image'
 import { classNames } from '@/utils/class-names'
+import { createElement } from '@/utils/create-element'
 import styles from './label.module.scss'
 
 export function createLabel(className?: string): HTMLElement {
-  const label = document.createElement('div')
-  const icon = createImage({
-    alt: 'label',
-    className: styles['label__icon'],
-    src: '/icons/label-icon.svg',
+  const label = createElement('div', {
+    className: classNames(styles.label, className),
   })
-  const title = document.createElement('span')
 
-  label.className = classNames(styles.label, className)
-
-  title.className = styles['label__title']
-  title.textContent = 'Книга контактов'
-
-  label.append(icon, title)
+  label.innerHTML = `
+    <img
+      class="${styles['label__icon']}"
+      src="/icons/label-icon.svg"
+      alt="label"
+    >
+    <span class="${styles['label__title']}">Книга контактов</span>
+  `
 
   return label
 }

@@ -1,0 +1,41 @@
+@use '@/styles/base/variables' as variables;
+
+.contacts-list {
+  padding-top: 24px;
+}
+
+.contacts-list__empty {
+  padding-top: calc(50dvh - 120px);
+  font-size: variables.$font-size-text-md;
+  line-height: 1.4;
+  font-weight: 400;
+  text-align: center;
+  color: rgba(variables.$color-black, 0.3);
+}
+
+.contacts-list__items {
+  display: grid;
+  gap: 12px;
+}
+
+.contacts-list__item {
+  display: grid;
+  gap: 6px;
+  padding: 14px 16px;
+  border-radius: 6px;
+  background: variables.$color-background-primary;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.contacts-list__name {
+  font-size: variables.$font-size-text-md;
+  line-height: variables.$line-height-text-md;
+  color: variables.$color-text-primary;
+}
+
+.contacts-list__meta {
+  font-size: variables.$font-size-text-sm;
+  line-height: variables.$line-height-text-sm;
+  font-weight: 400;
+  color: rgba(variables.$color-black, 0.6);
+}

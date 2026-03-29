@@ -59,30 +59,8 @@
 }
 
 .groups-popover__close-icon {
-  position: relative;
   width: 14px;
   height: 14px;
-}
-
-.groups-popover__close-icon::before,
-.groups-popover__close-icon::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 14px;
-  height: 2px;
-  border-radius: 999px;
-  background: variables.$color-text-muted;
-  transform-origin: center;
-}
-
-.groups-popover__close-icon::before {
-  transform: translate(-50%, -50%) rotate(45deg);
-}
-
-.groups-popover__close-icon::after {
-  transform: translate(-50%, -50%) rotate(-45deg);
 }
 
 .groups-popover__content {
@@ -139,33 +117,8 @@
 }
 
 .groups-popover__delete-icon {
-  position: relative;
   width: 18px;
   height: 18px;
-}
-
-.groups-popover__delete-icon::before {
-  content: '';
-  position: absolute;
-  top: 2px;
-  left: 4px;
-  width: 10px;
-  height: 2px;
-  border-radius: 999px;
-  background: variables.$color-text-muted;
-}
-
-.groups-popover__delete-icon::after {
-  content: '';
-  position: absolute;
-  top: 5px;
-  left: 4px;
-  width: 10px;
-  height: 9px;
-  box-sizing: border-box;
-  border: 2px solid variables.$color-text-muted;
-  border-top: none;
-  border-radius: 0 0 2px 2px;
 }
 
 .groups-popover__actions {
