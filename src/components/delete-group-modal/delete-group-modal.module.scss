@@ -1,3 +1,4 @@
+@use '@/styles/base/mixins' as mixins;
 @use '@/styles/base/variables' as variables;
 
 .delete-group-modal-root {
@@ -40,8 +41,10 @@
   height: 24px;
   padding: 0;
   border: none;
+  border-radius: 6px;
   background: transparent;
   cursor: pointer;
+  @include mixins.icon-button-hover;
 }
 
 .delete-group-modal__close-icon {
@@ -114,10 +117,12 @@
   line-height: variables.$line-height-text-sm;
   font-weight: variables.$font-weight-bold;
   cursor: pointer;
+  @include mixins.ghost-brand-button-hover;
 }
 
 .delete-group-modal__action-button--primary {
   min-width: 104px;
   background: variables.$color-brand-primary;
   color: variables.$color-text-inverse;
+  @include mixins.primary-brand-button-hover;
 }

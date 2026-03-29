@@ -4,31 +4,39 @@ import { ContactFormValidator } from '@/services/contact-form-validator'
 import { createElement } from '@/utils/create-element'
 import styles from './add-contact-popover.module.scss'
 
-type AddContactPayload = {
+export type ContactFormPopoverPayload = {
   groupId: string | null
   name: string
   phone: string
 }
 
-export type AddContactPopoverApi = {
+type ContactFormPopoverValues = ContactFormPopoverPayload
+
+export type ContactFormPopoverApi = {
   close: () => void
   element: HTMLElement
   isOpen: () => boolean
-  open: () => void
+  open: (values?: ContactFormPopoverValues) => void
   renderGroups: (groups: Group[]) => void
 }
 
-type CreateAddContactPopoverOptions = {
+type CreateContactFormPopoverOptions = {
   groups?: Group[]
-  onSubmit?: (payload: AddContactPayload) => void
+  onClose?: () => void
+  onSubmit?: (payload: ContactFormPopoverPayload) => boolean | void
+  submitButtonText: string
+  title: string
 }
 
 const GROUP_PLACEHOLDER = 'Выберите группу'
 
-export function createAddContactPopover({
+export function createContactFormPopover({
   groups = [],
+  onClose,
   onSubmit,
-}: CreateAddContactPopoverOptions = {}): AddContactPopoverApi {
+  submitButtonText,
+  title,
+}: CreateContactFormPopoverOptions): ContactFormPopoverApi {
   const validator = new ContactFormValidator()
   const root = createElement('div', {
     className: styles['add-contact-popover-root'],
@@ -36,13 +44,13 @@ export function createAddContactPopover({
 
   root.innerHTML = `
     <div class="${styles['add-contact-popover-root__backdrop']}"></div>
-    <section class="${styles['add-contact-popover']}" aria-label="Добавление контакта">
+    <section class="${styles['add-contact-popover']}" aria-label="${title}">
       <div class="${styles['add-contact-popover__header']}">
-        <h2 class="${styles['add-contact-popover__title']}">Добавление контакта</h2>
+        <h2 class="${styles['add-contact-popover__title']}">${title}</h2>
         <button
           type="button"
           class="${styles['add-contact-popover__close-button']}"
-          aria-label="Закрыть форму добавления контакта"
+          aria-label="Закрыть форму контакта"
         >
           <img
             class="${styles['add-contact-popover__close-icon']}"
@@ -101,7 +109,7 @@ export function createAddContactPopover({
             type="submit"
             class="${styles['add-contact-popover__submit-button']}"
           >
-            Сохранить
+            ${submitButtonText}
           </button>
         </div>
       </form>
@@ -239,12 +247,18 @@ export function createAddContactPopover({
     syncSelectedGroup()
   }
 
-  const resetForm = (): void => {
-    form?.reset()
-    if (phoneMask) {
-      phoneMask.value = ''
+  const applyValues = (values?: ContactFormPopoverValues): void => {
+    if (nameField) {
+      nameField.value = values?.name ?? ''
     }
-    selectedGroupId = null
+
+    if (phoneMask) {
+      phoneMask.value = values?.phone ?? ''
+    } else if (phoneField) {
+      phoneField.value = values?.phone ?? ''
+    }
+
+    selectedGroupId = values?.groupId ?? null
     clearFieldError('name')
     clearFieldError('phone')
     syncSelectedGroup()
@@ -253,10 +267,12 @@ export function createAddContactPopover({
 
   const close = (): void => {
     root.classList.remove(styles['add-contact-popover-root--open'])
-    resetForm()
+    applyValues()
+    onClose?.()
   }
 
-  const open = (): void => {
+  const open = (values?: ContactFormPopoverValues): void => {
+    applyValues(values)
     root.classList.add(styles['add-contact-popover-root--open'])
   }
 
@@ -329,16 +345,26 @@ export function createAddContactPopover({
       return
     }
 
-    onSubmit?.({
+    const submitResult = onSubmit?.({
       groupId: selectedGroupId,
       name,
       phone,
     })
+
+    if (submitResult === false) {
+      return
+    }
+
     close()
+  })
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && isOpen()) {
+      close()
+    }
   })
 
   renderGroups(groups)
-  closePicker()
+  applyValues()
 
   return {
     close,

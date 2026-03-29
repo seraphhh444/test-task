@@ -1,3 +1,4 @@
+@use '@/styles/base/mixins' as mixins;
 @use '@/styles/base/variables' as variables;
 
 .add-contact-popover-root {
@@ -29,6 +30,13 @@
   background: variables.$color-background-primary;
 }
 
+@media (min-width: variables.$desktop-breakpoint) {
+  .add-contact-popover {
+    right: auto;
+    left: 0;
+  }
+}
+
 .add-contact-popover__header {
   display: flex;
   align-items: center;
@@ -56,6 +64,7 @@
   border-radius: 6px;
   background: variables.$color-background-primary;
   cursor: pointer;
+  @include mixins.icon-button-hover;
 }
 
 .add-contact-popover__close-icon {
@@ -117,6 +126,10 @@
   cursor: pointer;
 }
 
+.add-contact-popover__group-trigger:hover {
+  background: rgba(variables.$color-black, 0.08);
+}
+
 .add-contact-popover__group-trigger::after {
   content: '';
   position: absolute;
@@ -176,6 +189,10 @@
   cursor: pointer;
 }
 
+.add-contact-popover__group-option:hover {
+  background: #e4e3e3;
+}
+
 .add-contact-popover__group-option--active {
   background: #e4e3e3;
 }
@@ -199,4 +216,5 @@
   font-weight: variables.$font-weight-bold;
   color: variables.$color-text-inverse;
   cursor: pointer;
+  @include mixins.primary-brand-button-hover;
 }

@@ -1,3 +1,4 @@
+@use '@/styles/base/mixins' as mixins;
 @use '@/styles/base/variables' as variables;
 
 .contacts-list {
@@ -38,6 +39,7 @@
   border-radius: 6px;
   background: transparent;
   cursor: pointer;
+  @include mixins.icon-button-hover;
 }
 
 .contacts-list__group--expanded .contacts-list__group-toggle {
@@ -122,6 +124,7 @@
   border-radius: 6px;
   background: transparent;
   cursor: pointer;
+  @include mixins.icon-button-hover;
 }
 
 .contacts-list__edit-icon {

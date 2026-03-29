@@ -19,13 +19,24 @@ export class ContactsService {
     return this.repository.read().map((contact) => new Contact(contact))
   }
 
-  addContact(payload: CreateContactPayload): Contact {
-    const normalizedPhone = payload.phone.replace(/\D/g, '')
-    const hasDuplicatePhone = this.repository.read().some(
-      (contact) => contact.phone.replace(/\D/g, '') === normalizedPhone,
-    )
+  private normalizePhone(phone: string): string {
+    return phone.replace(/\D/g, '')
+  }
 
-    if (hasDuplicatePhone) {
+  private hasDuplicatePhone(phone: string, excludedContactId?: string): boolean {
+    const normalizedPhone = this.normalizePhone(phone)
+
+    return this.repository.read().some((contact) => {
+      if (contact.id === excludedContactId) {
+        return false
+      }
+
+      return this.normalizePhone(contact.phone) === normalizedPhone
+    })
+  }
+
+  addContact(payload: CreateContactPayload): Contact {
+    if (this.hasDuplicatePhone(payload.phone)) {
       throw new DuplicateEntityError('Контакт с таким номером уже существует')
     }
 
@@ -35,6 +46,34 @@ export class ContactsService {
     this.repository.write([...contacts, nextContact.toJSON()])
 
     return nextContact
+  }
+
+  updateContact(contactId: string, payload: CreateContactPayload): Contact {
+    if (this.hasDuplicatePhone(payload.phone, contactId)) {
+      throw new DuplicateEntityError('Контакт с таким номером уже существует')
+    }
+
+    const updatedContact = new Contact({
+      groupId: payload.groupId,
+      id: contactId,
+      name: payload.name,
+      phone: payload.phone,
+    })
+    const nextContacts = this.repository.read().map((contact) =>
+      contact.id === contactId ? updatedContact.toJSON() : contact,
+    )
+
+    this.repository.write(nextContacts)
+
+    return updatedContact
+  }
+
+  deleteContact(contactId: string): void {
+    const nextContacts = this.repository
+      .read()
+      .filter((contact) => contact.id !== contactId)
+
+    this.repository.write(nextContacts)
   }
 
   deleteContactsByGroup(groupId: string): void {

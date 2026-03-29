@@ -1,26 +1,33 @@
-import { createAddContactPopover } from '@/components/add-contact-popover'
+import {
+  createContactFormPopover,
+  type ContactFormPopoverPayload,
+} from '@/components/add-contact-popover'
 import { createButton } from '@/components/button'
-import { ContactsService } from '@/services/contacts-service'
 import { createDeleteGroupModal } from '@/components/delete-group-modal'
 import { createGroupsPopover } from '@/components/groups-popover'
 import { createLabel } from '@/components/label'
-import { createToast } from '@/components/toast'
-import { DuplicateEntityError } from '@/services/duplicate-entity-error'
-import { GroupsService } from '@/services/groups-service'
+import type { Group } from '@/entities/group'
 import { createElement } from '@/utils/create-element'
 import styles from './header.module.scss'
 
 type CreateHeaderOptions = {
-  contactsService: ContactsService
-  groupsService: GroupsService
-  onContactsChange?: () => void
+  groups: Group[]
+  onAddContact?: (payload: ContactFormPopoverPayload) => boolean | void
+  onAddGroup?: (groupName: string) => void
+  onDeleteGroup?: (groupId: string) => void
+}
+
+export type HeaderApi = {
+  element: HTMLElement
+  renderGroups: (groups: Group[]) => void
 }
 
 export function createHeader({
-  contactsService,
-  groupsService,
-  onContactsChange,
-}: CreateHeaderOptions): HTMLElement {
+  groups,
+  onAddContact,
+  onAddGroup,
+  onDeleteGroup,
+}: CreateHeaderOptions): HeaderApi {
   const header = createElement('header', { className: styles.header })
   const container = createElement('div', {
     className: `container ${styles['header__container']}`,
@@ -33,27 +40,19 @@ export function createHeader({
   const groupsControl = createElement('div', {
     className: styles['header__groups-control'],
   })
-  const toast = createToast()
-  const addContactPopover = createAddContactPopover({
-    groups: groupsService.getGroups(),
-    onSubmit: ({ groupId, name, phone }) => {
-      try {
-        contactsService.addContact({
-          groupId,
-          name,
-          phone,
-        })
-        toast.show('Контакт успешно создан', 'success')
-        onContactsChange?.()
-      } catch (error) {
-        if (error instanceof DuplicateEntityError) {
-          toast.show(error.message, 'error')
-        }
-      }
+  const addContactPopover = createContactFormPopover({
+    groups,
+    submitButtonText: 'Сохранить',
+    title: 'Добавление контакта',
+    onSubmit: (payload) => onAddContact?.(payload),
+  })
+  const deleteGroupModal = createDeleteGroupModal({
+    onConfirm: (group) => {
+      onDeleteGroup?.(group.id)
     },
   })
   const groupsPopover = createGroupsPopover({
-    groups: groupsService.getGroups(),
+    groups,
     onAddGroupClick: () => {
       const groupName = window.prompt('Введите название группы')
 
@@ -61,32 +60,10 @@ export function createHeader({
         return
       }
 
-      try {
-        groupsService.addGroup(groupName)
-        renderGroups()
-        toast.show('Группа успешно создана', 'success')
-      } catch (error) {
-        if (error instanceof DuplicateEntityError) {
-          toast.show(error.message, 'error')
-        }
-      }
+      onAddGroup?.(groupName)
     },
     onDeleteGroupClick: (group) => {
       deleteGroupModal.open(group)
-    },
-  })
-  const renderGroups = (): void => {
-    const groups = groupsService.getGroups()
-
-    groupsPopover.render(groups)
-    addContactPopover.renderGroups(groups)
-  }
-  const deleteGroupModal = createDeleteGroupModal({
-    onConfirm: (group) => {
-      contactsService.deleteContactsByGroup(group.id)
-      groupsService.deleteGroup(group.id)
-      renderGroups()
-      onContactsChange?.()
     },
   })
   const groupsButton = createButton({
@@ -97,13 +74,16 @@ export function createHeader({
       groupsPopover.toggle()
     },
   })
+
+  const renderGroups = (nextGroups: Group[]): void => {
+    groupsPopover.render(nextGroups)
+    addContactPopover.renderGroups(nextGroups)
+  }
+
   addContactButton.addEventListener('click', (event) => {
     event.stopPropagation()
-    renderGroups()
     addContactPopover.open()
   })
-
-  renderGroups()
 
   addContactPopover.element.addEventListener('click', (event) => {
     event.stopPropagation()
@@ -131,11 +111,12 @@ export function createHeader({
   })
 
   groupsControl.append(groupsButton, groupsPopover.element)
-  header.append(addContactPopover.element)
-  header.append(deleteGroupModal.element)
-  header.append(toast.element)
+  header.append(addContactPopover.element, deleteGroupModal.element)
   container.append(label, addContactButton, groupsControl)
   header.append(container)
 
-  return header
+  return {
+    element: header,
+    renderGroups,
+  }
 }

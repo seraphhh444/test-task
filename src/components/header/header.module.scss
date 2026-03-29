@@ -1,3 +1,4 @@
+@use '@/styles/base/mixins' as mixins;
 @use '@/styles/base/variables' as variables;
 
 .header {
@@ -25,10 +26,7 @@
   grid-area: add;
   width: 100%;
   background-color: variables.$color-accent-primary;
-}
-
-.header__add-contact-button:hover {
-  background-color: variables.$color-accent-primary-hover;
+  @include mixins.primary-accent-button-hover;
 }
 
 .header__groups-control {

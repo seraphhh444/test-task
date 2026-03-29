@@ -1,0 +1,25 @@
+@use '@/styles/base/variables' as variables;
+
+@mixin icon-button-hover {
+  &:hover {
+    background: variables.$color-background-secondary;
+  }
+}
+
+@mixin ghost-brand-button-hover {
+  &:hover {
+    background: variables.$color-background-brand-subtle;
+  }
+}
+
+@mixin primary-brand-button-hover {
+  &:hover {
+    background: variables.$color-brand-primary-hover;
+  }
+}
+
+@mixin primary-accent-button-hover {
+  &:hover {
+    background: variables.$color-accent-primary-hover;
+  }
+}

@@ -1,3 +1,4 @@
+@use '@/styles/base/mixins' as mixins;
 @use '@/styles/base/variables' as variables;
 
 .button {
@@ -9,4 +10,5 @@
     border: none;
     padding: 10px 14px 10px 14px;
     border-radius: 6px;
+    @include mixins.primary-brand-button-hover;
 }

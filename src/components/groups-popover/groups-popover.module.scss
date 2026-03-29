@@ -1,3 +1,4 @@
+@use '@/styles/base/mixins' as mixins;
 @use '@/styles/base/variables' as variables;
 
 .groups-popover-root {
@@ -29,6 +30,13 @@
   background: variables.$color-background-primary;
 }
 
+@media (min-width: variables.$desktop-breakpoint) {
+  .groups-popover {
+    right: auto;
+    left: 0;
+  }
+}
+
 .groups-popover__header {
   display: flex;
   align-items: center;
@@ -56,6 +64,7 @@
   border-radius: 6px;
   background: variables.$color-background-primary;
   cursor: pointer;
+  @include mixins.icon-button-hover;
 }
 
 .groups-popover__close-icon {
@@ -114,6 +123,7 @@
   border-radius: 6px;
   background: transparent;
   cursor: pointer;
+  @include mixins.icon-button-hover;
 }
 
 .groups-popover__delete-icon {
@@ -140,10 +150,12 @@
   line-height: variables.$line-height-text-sm;
   font-weight: variables.$font-weight-bold;
   cursor: pointer;
+  @include mixins.ghost-brand-button-hover;
 }
 
 .groups-popover__action-button--primary {
   min-width: 104px;
   background: variables.$color-brand-primary;
   color: variables.$color-text-inverse;
+  @include mixins.primary-brand-button-hover;
 }

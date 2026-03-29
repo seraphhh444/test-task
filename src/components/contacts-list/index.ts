@@ -19,11 +19,20 @@ export type ContactsListApi = {
   render: (payload: RenderContactsListPayload) => void
 }
 
-export function createContactsList(): ContactsListApi {
+type CreateContactsListOptions = {
+  onDeleteContactClick?: (contactId: string) => void
+  onEditContactClick?: (contactId: string) => void
+}
+
+export function createContactsList({
+  onDeleteContactClick,
+  onEditContactClick,
+}: CreateContactsListOptions = {}): ContactsListApi {
   const root = createElement('section', {
     className: styles['contacts-list'],
   })
   let expandedGroupIds = new Set<string>()
+  let currentPayload: RenderContactsListPayload | null = null
 
   const getContactGroups = (
     contacts: Contact[],
@@ -101,6 +110,8 @@ export function createContactsList(): ContactsListApi {
                                       type="button"
                                       class="${styles['contacts-list__action-button']}"
                                       aria-label="Редактировать контакт ${contact.name}"
+                                      data-role="edit-contact"
+                                      data-contact-id="${contact.id}"
                                     >
                                       <img
                                         class="${styles['contacts-list__edit-icon']}"
@@ -112,6 +123,8 @@ export function createContactsList(): ContactsListApi {
                                       type="button"
                                       class="${styles['contacts-list__action-button']}"
                                       aria-label="Удалить контакт ${contact.name}"
+                                      data-role="delete-contact"
+                                      data-contact-id="${contact.id}"
                                     >
                                       <img
                                         class="${styles['contacts-list__delete-icon']}"
@@ -149,6 +162,30 @@ export function createContactsList(): ContactsListApi {
       return
     }
 
+    const editButton = target.closest<HTMLButtonElement>('[data-role="edit-contact"]')
+
+    if (editButton) {
+      const contactId = editButton.dataset.contactId
+
+      if (contactId) {
+        onEditContactClick?.(contactId)
+      }
+
+      return
+    }
+
+    const deleteButton = target.closest<HTMLButtonElement>('[data-role="delete-contact"]')
+
+    if (deleteButton) {
+      const contactId = deleteButton.dataset.contactId
+
+      if (contactId) {
+        onDeleteContactClick?.(contactId)
+      }
+
+      return
+    }
+
     const toggle = target.closest<HTMLButtonElement>(
       `.${styles['contacts-list__group-toggle']}`,
     )
@@ -173,24 +210,17 @@ export function createContactsList(): ContactsListApi {
   })
 
   root.addEventListener('contacts-list:rerender', () => {
-    const contacts = root.dataset.contacts
-    const groups = root.dataset.groups
-
-    if (!contacts || !groups) {
+    if (!currentPayload) {
       return
     }
 
-    render({
-      contacts: JSON.parse(contacts) as Contact[],
-      groups: JSON.parse(groups) as Group[],
-    })
+    render(currentPayload)
   })
 
   return {
     element: root,
     render: (payload) => {
-      root.dataset.contacts = JSON.stringify(payload.contacts)
-      root.dataset.groups = JSON.stringify(payload.groups)
+      currentPayload = payload
       render(payload)
     },
   }
