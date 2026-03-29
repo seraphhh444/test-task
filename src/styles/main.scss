@@ -1,0 +1,29 @@
+@use './base' as base;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: base.$font-family-primary;
+  font-weight: 700;
+}
+
+body {
+  color: base.$color-text-primary;
+  background-color: base.$color-background-page;
+}
+
+.container {
+  width: min(100% - (base.$container-inline-padding * 2), base.$mobile-content-width);
+  margin-inline: auto;
+}
+
+h1 {
+  color: base.$color-brand-primary;
+}
+
+@media (min-width: base.$desktop-breakpoint) {
+  .container {
+    width: min(100% - (base.$container-inline-padding * 2), base.$desktop-content-width);
+  }
+}

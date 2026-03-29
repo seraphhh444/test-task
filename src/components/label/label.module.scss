@@ -1,0 +1,20 @@
+@use '@/styles/base/variables' as variables;
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.label__icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 22px;
+}
+
+.label__title {
+  color: variables.$color-brand-primary;
+  font-size: variables.$font-size-text-md;
+  display: flex;
+  align-items: center;
+}

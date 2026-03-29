@@ -1,0 +1,12 @@
+@use '@/styles/base/variables' as variables;
+
+.button {
+    min-height: 38px;
+    background-color: variables.$color-brand-primary;
+    color: variables.$color-text-inverse;
+    font-size: variables.$font-size-text-sm;
+    line-height: variables.$line-height-text-sm;
+    border: none;
+    padding: 10px 14px 10px 14px;
+    border-radius: 6px;
+}

@@ -1,0 +1,48 @@
+@use '@/styles/base/variables' as variables;
+
+.header {
+  padding-top: 26px;
+  padding-bottom: 26px;
+  background: variables.$color-background-primary;
+}
+
+.header__container {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    'label groups'
+    'add add';
+  align-items: center;
+  gap: 16px;
+}
+
+.header__label {
+  grid-area: label;
+  min-width: 0;
+}
+
+.header__add-contact-button {
+  grid-area: add;
+  width: 100%;
+}
+
+.header__groups-control {
+  position: relative;
+  grid-area: groups;
+  justify-self: end;
+}
+
+.header__groups-button {
+  justify-self: end;
+}
+
+@media (min-width: variables.$desktop-breakpoint) {
+  .header__container {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-areas: 'label add groups';
+  }
+
+  .header__add-contact-button {
+    width: auto;
+  }
+}
