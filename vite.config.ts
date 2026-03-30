@@ -7,4 +7,5 @@ export default defineConfig({
       '@': resolve(__dirname, 'src'),
     },
   },
+  base: "test-task"
 });
