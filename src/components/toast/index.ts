@@ -1,4 +1,5 @@
 import { createElement } from '@/utils/create-element'
+import successIcon from '@/assets/success-action.svg'
 import styles from './toast.module.scss'
 
 type ToastVariant = 'error' | 'success'
@@ -26,7 +27,7 @@ export function createToast(): ToastApi {
         ? `
           <img
             class="${styles['toast__icon']}"
-            src="/icons/success-action.svg"
+            src="${successIcon}"
             alt=""
           >
         `

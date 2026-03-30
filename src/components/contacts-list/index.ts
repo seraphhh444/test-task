@@ -2,6 +2,9 @@ import type { Contact } from '@/entities/contact'
 import type { Group } from '@/entities/group'
 import { createElement } from '@/utils/create-element'
 import styles from './contacts-list.module.scss'
+import checkIcon from '@/assets/check-group.svg'
+import editIcon from '@/assets/edit-contact-icon.svg'
+import deleteIcon from '@/assets/delete-contact.svg'
 
 type RenderContactsListPayload = {
   contacts: Contact[]
@@ -93,7 +96,7 @@ export function createContactsList({
                   <span class="${styles['contacts-list__group-title']}">${group.name}</span>
                   <img
                       class="${styles['contacts-list__arrow']}"
-                      src="/icons/check-group.svg"
+                      src="${checkIcon}"
                       alt=""
                   >
                 </button>
@@ -119,7 +122,7 @@ export function createContactsList({
                                     >
                                       <img
                                         class="${styles['contacts-list__edit-icon']}"
-                                        src="/icons/edit-contact-icon.svg"
+                                        src="${editIcon}"
                                         alt=""
                                       >
                                     </button>
@@ -132,7 +135,7 @@ export function createContactsList({
                                     >
                                       <img
                                         class="${styles['contacts-list__delete-icon']}"
-                                        src="/icons/delete-contact.svg"
+                                        src="${deleteIcon}"
                                         alt=""
                                       >
                                     </button>

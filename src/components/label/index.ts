@@ -1,6 +1,7 @@
 import { classNames } from '@/utils/class-names'
 import { createElement } from '@/utils/create-element'
 import styles from './label.module.scss'
+import labelIcon from '@/assets/label-icon.svg'
 
 export function createLabel(className?: string): HTMLElement {
   const label = createElement('div', {
@@ -10,7 +11,7 @@ export function createLabel(className?: string): HTMLElement {
   label.innerHTML = `
     <img
       class="${styles['label__icon']}"
-      src="/icons/label-icon.svg"
+      src="${labelIcon}"
       alt="label"
     >
     <span class="${styles['label__title']}">Книга контактов</span>

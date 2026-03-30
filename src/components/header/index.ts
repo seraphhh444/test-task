@@ -9,6 +9,8 @@ import { createLabel } from '@/components/label'
 import type { Group } from '@/entities/group'
 import { createElement } from '@/utils/create-element'
 import styles from './header.module.scss'
+import { createImage } from '../image'
+import contactIcon from '@/assets/add-contact.svg'
 
 type CreateHeaderOptions = {
   groups: Group[]
@@ -37,6 +39,13 @@ export function createHeader({
     text: 'Добавить контакт',
     className: styles['header__add-contact-button'],
   })
+  const addContactIcon = createImage({
+    alt: 'add-contant-icon',
+    src: contactIcon
+  });
+
+  addContactButton.append(addContactIcon);
+
   const groupsControl = createElement('div', {
     className: styles['header__groups-control'],
   })

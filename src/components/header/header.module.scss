@@ -42,6 +42,10 @@
   min-height: 50px;
   background-color: variables.$color-accent-primary;
   @include mixins.primary-accent-button-hover;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  gap: 18px;
 }
 
 .header__groups-control {
@@ -75,5 +79,6 @@
   .header__add-contact-button {
     width: auto;
     min-height: 38px;
+    justify-content: start;
   }
 }

@@ -1,5 +1,7 @@
 import type { Group } from '@/entities/group'
 import { createElement } from '@/utils/create-element'
+import closeIcon from '@/assets/close-popover-icon.svg'
+import deleteIcon from '@/assets/delete-icon.svg'
 import styles from './groups-popover.module.scss'
 
 export type GroupsPopoverApi = {
@@ -38,7 +40,7 @@ export function createGroupsPopover({
         >
           <img
             class="${styles['groups-popover__close-icon']}"
-            src="/icons/close-popover-icon.svg"
+            src="${closeIcon}"
             alt=""
           >
         </button>
@@ -105,7 +107,7 @@ export function createGroupsPopover({
             >
               <img
                 class="${styles['groups-popover__delete-icon']}"
-                src="/icons/delete-icon.svg"
+                src="${deleteIcon}"
                 alt=""
               >
             </button>

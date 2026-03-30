@@ -2,6 +2,7 @@ import IMask from 'imask'
 import type { Group } from '@/entities/group'
 import { ContactFormValidator } from '@/services/contact-form-validator'
 import { createElement } from '@/utils/create-element'
+import checkIcon from '@/assets/check-group.svg'
 import styles from './add-contact-popover.module.scss'
 
 export type ContactFormPopoverPayload = {
@@ -101,7 +102,7 @@ export function createContactFormPopover({
             <span class="${styles['add-contact-popover__group-trigger-text']}">${GROUP_PLACEHOLDER}</span>
             <img
                       class="${styles['contacts-list__arrow']}"
-                      src="/icons/check-group.svg"
+                      src="${checkIcon}"
                       alt=""
             >
           </button>
