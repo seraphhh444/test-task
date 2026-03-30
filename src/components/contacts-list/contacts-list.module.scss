@@ -47,6 +47,10 @@
   padding-bottom: 24px;
 }
 
+.contacts-list__group--expanded .contacts-list__arrow {
+  transform: rotate(180deg);
+}
+
 .contacts-list__group-title {
   font-size: variables.$font-size-text-md;
   line-height: variables.$line-height-text-md;
@@ -55,14 +59,6 @@
 
 .contacts-list__group--expanded .contacts-list__group-title {
   color: variables.$color-brand-primary;
-}
-
-.contacts-list__group-arrow {
-  width: 24px;
-  height: 24px;
-  opacity: 0.5;
-  background: url('/icons/check-group.svg') center / 24px 24px no-repeat;
-  transform: rotate(0deg);
 }
 
 .contacts-list__group--expanded .contacts-list__group-arrow {

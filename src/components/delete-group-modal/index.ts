@@ -38,17 +38,17 @@ export function createDeleteGroupModal({
         <div class="${styles['delete-group-modal__actions']}">
           <button
             type="button"
+            class="${styles['delete-group-modal__action-button']} ${styles['delete-group-modal__action-button--primary']}"
+            data-role="confirm"
+          >
+            Да, удалить
+          </button>
+          <button
+            type="button"
             class="${styles['delete-group-modal__action-button']}"
             data-role="cancel"
           >
             Отмена
-          </button>
-          <button
-            type="button"
-            class="${styles['delete-group-modal__action-button']} ${styles['delete-group-modal__action-button--primary']}"
-            data-role="confirm"
-          >
-            Удалить
           </button>
         </div>
       </div>

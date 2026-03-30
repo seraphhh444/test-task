@@ -67,11 +67,6 @@
   @include mixins.icon-button-hover;
 }
 
-.add-contact-popover__close-icon {
-  width: 24px;
-  height: 24px;
-}
-
 .add-contact-popover__form {
   display: flex;
   flex: 1 1 auto;
@@ -99,6 +94,16 @@
   font-weight: 400;
   color: variables.$color-text-primary;
   outline: none;
+
+  &:hover {
+    border-color: variables.$color-brand-primary;
+  }
+
+  &:focus,
+  &:focus-visible {
+    border-color: variables.$color-brand-primary;
+    box-shadow: 0 0 5px rgba(variables.$color-brand-primary, 0.4);
+  }
 }
 
 .add-contact-popover__field::placeholder {
@@ -107,6 +112,7 @@
 
 .add-contact-popover__field-group--error .add-contact-popover__field {
   border-color: #ea3d2f;
+  box-shadow: none;
 }
 
 .add-contact-popover__field-message {
@@ -121,24 +127,13 @@
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  padding-right: 44px;
+  justify-content: space-between;
   cursor: pointer;
+  
 }
 
 .add-contact-popover__group-trigger:hover {
   background: rgba(variables.$color-black, 0.08);
-}
-
-.add-contact-popover__group-trigger::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  right: 12px;
-  width: 24px;
-  height: 24px;
-  background: url('/icons/choose-group-icon.svg') center / 24px 24px no-repeat;
-  transform: translateY(-50%);
 }
 
 .add-contact-popover__group-trigger-text {
@@ -156,6 +151,10 @@
 
 .add-contact-popover__group-field--open {
   z-index: 1;
+}
+
+.add-contact-popover__group-field--open img {
+  transform: rotate(180deg);
 }
 
 .add-contact-popover__picker {

@@ -91,7 +91,11 @@ export function createContactsList({
                   aria-expanded="${String(isExpanded)}"
                 >
                   <span class="${styles['contacts-list__group-title']}">${group.name}</span>
-                  <span class="${styles['contacts-list__group-arrow']}"></span>
+                  <img
+                      class="${styles['contacts-list__arrow']}"
+                      src="/icons/check-group.svg"
+                      alt=""
+                  >
                 </button>
                 ${
                   isExpanded

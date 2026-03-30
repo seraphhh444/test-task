@@ -99,6 +99,11 @@ export function createContactFormPopover({
             aria-expanded="false"
           >
             <span class="${styles['add-contact-popover__group-trigger-text']}">${GROUP_PLACEHOLDER}</span>
+            <img
+                      class="${styles['contacts-list__arrow']}"
+                      src="/icons/check-group.svg"
+                      alt=""
+            >
           </button>
           <div class="${styles['add-contact-popover__picker']}" hidden>
             <div class="${styles['add-contact-popover__picker-menu']}"></div>

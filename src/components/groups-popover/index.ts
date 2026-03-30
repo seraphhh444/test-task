@@ -69,6 +69,9 @@ export function createGroupsPopover({
   const closeButton = root.querySelector<HTMLButtonElement>(
     `.${styles['groups-popover__close-button']}`,
   )
+  const saveButton = root.querySelector<HTMLButtonElement>(
+  `.${styles['groups-popover__action-button--primary']}`,
+  );
   const addButton = root.querySelector<HTMLButtonElement>(
     `.${styles['groups-popover__action-button']}`,
   )
@@ -132,6 +135,9 @@ export function createGroupsPopover({
   addButton?.addEventListener('click', () => {
     onAddGroupClick?.()
   })
+  saveButton?.addEventListener('click', () => {
+    close();
+  });
   groupsList?.addEventListener('click', (event) => {
     const target = event.target
 

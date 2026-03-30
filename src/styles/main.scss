@@ -13,17 +13,23 @@ body {
   background-color: base.$color-background-page;
 }
 
-.container {
-  width: min(100% - (base.$container-inline-padding * 2), base.$mobile-content-width);
-  margin-inline: auto;
+button:focus {
+  outline: none;
 }
 
-h1 {
-  color: base.$color-brand-primary;
+.container {
+  width: 100%;
+  max-width: base.$desktop-content-width + (base.$container-inline-padding-desktop * 2);
+  margin-inline: auto;
+  padding-inline: base.$container-inline-padding-mobile;
 }
 
 @media (min-width: base.$desktop-breakpoint) {
   .container {
-    width: min(100% - (base.$container-inline-padding * 2), base.$desktop-content-width);
+    padding-inline: base.$container-inline-padding-desktop;
   }
+}
+
+h1 {
+  color: base.$color-brand-primary;
 }

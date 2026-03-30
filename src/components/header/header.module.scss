@@ -2,19 +2,33 @@
 @use '@/styles/base/variables' as variables;
 
 .header {
-  padding-top: 26px;
-  padding-bottom: 26px;
+  position: relative;
+  padding-bottom: 24px;
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 70px;
   background: variables.$color-background-primary;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
 .header__container {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: 70px auto;
   grid-template-areas:
     'label groups'
     'add add';
   align-items: center;
-  gap: 16px;
+  column-gap: 16px;
+  row-gap: 24px;
 }
 
 .header__label {
@@ -25,6 +39,7 @@
 .header__add-contact-button {
   grid-area: add;
   width: 100%;
+  min-height: 50px;
   background-color: variables.$color-accent-primary;
   @include mixins.primary-accent-button-hover;
 }
@@ -40,12 +55,25 @@
 }
 
 @media (min-width: variables.$desktop-breakpoint) {
+  .header {
+    padding-bottom: 0;
+    background: variables.$color-background-primary;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  }
+
+  .header::before {
+    display: none;
+  }
+
   .header__container {
     grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-rows: 70px;
     grid-template-areas: 'label add groups';
+    row-gap: 0;
   }
 
   .header__add-contact-button {
     width: auto;
+    min-height: 38px;
   }
 }

@@ -31,8 +31,7 @@ $mobile-viewport-width: 375px;
 $mobile-content-width: 343px;
 $desktop-content-width: 1160px;
 
-$container-inline-padding: calc(
-  ($mobile-viewport-width - $mobile-content-width) / 2
-);
+$container-inline-padding-mobile: 16px;
+$container-inline-padding-desktop: 24px;
 
-$desktop-breakpoint: $desktop-content-width + ($container-inline-padding * 2);
+$desktop-breakpoint: $desktop-content-width + ($container-inline-padding-desktop * 2);
