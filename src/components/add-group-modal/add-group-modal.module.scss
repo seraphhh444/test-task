@@ -1,7 +1,7 @@
 @use '@/styles/base/mixins' as mixins;
 @use '@/styles/base/variables' as variables;
 
-@keyframes delete-group-modal-backdrop-in {
+@keyframes add-group-modal-backdrop-in {
   from {
     opacity: 0;
   }
@@ -11,7 +11,7 @@
   }
 }
 
-@keyframes delete-group-modal-in {
+@keyframes add-group-modal-in {
   from {
     opacity: 0;
     transform: translate(-50%, calc(-50% + 18px)) scale(0.96);
@@ -23,30 +23,29 @@
   }
 }
 
-.delete-group-modal-root {
+.add-group-modal-root {
   position: fixed;
   inset: 0;
   z-index: 20;
   display: none;
 }
 
-.delete-group-modal-root--open {
+.add-group-modal-root--open {
   display: block;
 }
 
-.delete-group-modal-root__backdrop {
+.add-group-modal-root__backdrop {
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.6);
   opacity: 0;
 }
 
-.delete-group-modal {
+.add-group-modal {
   position: absolute;
   top: 50%;
   left: 50%;
   width: min(393px, calc(100vw - 32px));
-  min-height: 222px;
   transform: translate(-50%, -50%);
   border-radius: 6px;
   background: variables.$color-background-primary;
@@ -55,15 +54,15 @@
   will-change: transform, opacity;
 }
 
-.delete-group-modal-root--open .delete-group-modal-root__backdrop {
-  animation: delete-group-modal-backdrop-in 0.22s ease-out forwards;
+.add-group-modal-root--open .add-group-modal-root__backdrop {
+  animation: add-group-modal-backdrop-in 0.22s ease-out forwards;
 }
 
-.delete-group-modal-root--open .delete-group-modal {
-  animation: delete-group-modal-in 0.24s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+.add-group-modal-root--open .add-group-modal {
+  animation: add-group-modal-in 0.24s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
-.delete-group-modal__close-button {
+.add-group-modal__close-button {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -80,14 +79,14 @@
   @include mixins.icon-button-hover;
 }
 
-.delete-group-modal__close-icon {
+.add-group-modal__close-icon {
   position: relative;
   width: 14px;
   height: 14px;
 }
 
-.delete-group-modal__close-icon::before,
-.delete-group-modal__close-icon::after {
+.add-group-modal__close-icon::before,
+.add-group-modal__close-icon::after {
   content: '';
   position: absolute;
   top: 50%;
@@ -98,47 +97,77 @@
   background: variables.$color-text-muted;
 }
 
-.delete-group-modal__close-icon::before {
+.add-group-modal__close-icon::before {
   transform: translate(-50%, -50%) rotate(45deg);
 }
 
-.delete-group-modal__close-icon::after {
+.add-group-modal__close-icon::after {
   transform: translate(-50%, -50%) rotate(-45deg);
 }
 
-.delete-group-modal__content {
+.add-group-modal__content {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 24px;
-  width: 313px;
+  width: min(313px, calc(100% - 48px));
   margin: 40px auto;
 }
 
-.delete-group-modal__title {
-  width: 100%;
+.add-group-modal__title {
   font-size: variables.$font-size-text-md;
-  line-height: 1.2;
+  line-height: variables.$line-height-text-md;
   text-align: center;
   color: variables.$color-text-primary;
 }
 
-.delete-group-modal__description {
+.add-group-modal__field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.add-group-modal__field-group--error .add-group-modal__field {
+  border-color: variables.$color-accent-primary;
+}
+
+.add-group-modal__field {
   width: 100%;
+  min-height: 38px;
+  padding: 10px 12px;
+  border: 1px solid variables.$color-background-neutral-subtle;
+  border-radius: 6px;
+  background: variables.$color-background-primary;
   font-size: variables.$font-size-text-sm;
-  line-height: 1.2;
+  line-height: variables.$line-height-text-sm;
   font-weight: 400;
-  text-align: center;
   color: variables.$color-text-primary;
 }
 
-.delete-group-modal__actions {
+.add-group-modal__field::placeholder {
+  color: variables.$color-text-muted;
+}
+
+.add-group-modal__field:focus {
+  outline: none;
+  border-color: variables.$color-brand-primary;
+}
+
+.add-group-modal__field-message {
+  min-height: 18px;
+  font-size: variables.$font-size-text-sm;
+  line-height: variables.$line-height-text-sm;
+  font-weight: 400;
+  color: variables.$color-accent-primary;
+}
+
+.add-group-modal__actions {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
 }
 
-.delete-group-modal__action-button {
+.add-group-modal__action-button {
   min-width: 96px;
   min-height: 38px;
   padding: 10px 14px;
@@ -153,7 +182,7 @@
   @include mixins.ghost-brand-button-hover;
 }
 
-.delete-group-modal__action-button--primary {
+.add-group-modal__action-button--primary {
   min-width: 104px;
   background: variables.$color-brand-primary;
   color: variables.$color-text-inverse;

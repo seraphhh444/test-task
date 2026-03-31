@@ -1,5 +1,5 @@
+import { OverlayController } from '@/components/overlay-controller'
 import type { Group } from '@/entities/group'
-import { createElement } from '@/utils/create-element'
 import styles from './delete-group-modal.module.scss'
 
 export type DeleteGroupModalApi = {
@@ -16,77 +16,65 @@ type CreateDeleteGroupModalOptions = {
 export function createDeleteGroupModal({
   onConfirm,
 }: CreateDeleteGroupModalOptions = {}): DeleteGroupModalApi {
-  const root = createElement('div', {
-    className: styles['delete-group-modal-root'],
+  const overlay = new OverlayController({
+    backdropClassName: styles['delete-group-modal-root__backdrop'],
+    openClassName: styles['delete-group-modal-root--open'],
+    panelClassName: styles['delete-group-modal'],
+    rootClassName: styles['delete-group-modal-root'],
   })
 
-  root.innerHTML = `
-    <div class="${styles['delete-group-modal-root__backdrop']}"></div>
-    <section class="${styles['delete-group-modal']}">
-      <button
-        type="button"
-        class="${styles['delete-group-modal__close-button']}"
-        aria-label="Закрыть окно удаления группы"
-      >
-        <span class="${styles['delete-group-modal__close-icon']}"></span>
-      </button>
-      <div class="${styles['delete-group-modal__content']}">
-        <h2 class="${styles['delete-group-modal__title']}">Удалить группу?</h2>
-        <p class="${styles['delete-group-modal__description']}">
-          Удаление группы повлечет за собой удаление контактов, связанных с этой группой.
-        </p>
-        <div class="${styles['delete-group-modal__actions']}">
-          <button
-            type="button"
-            class="${styles['delete-group-modal__action-button']} ${styles['delete-group-modal__action-button--primary']}"
-            data-role="confirm"
-          >
-            Да, удалить
-          </button>
-          <button
-            type="button"
-            class="${styles['delete-group-modal__action-button']}"
-            data-role="cancel"
-          >
-            Отмена
-          </button>
-        </div>
+  overlay.panel.innerHTML = `
+    <button
+      type="button"
+      class="${styles['delete-group-modal__close-button']}"
+      aria-label="Закрыть окно удаления группы"
+    >
+      <span class="${styles['delete-group-modal__close-icon']}"></span>
+    </button>
+    <div class="${styles['delete-group-modal__content']}">
+      <h2 class="${styles['delete-group-modal__title']}">Удалить группу?</h2>
+      <p class="${styles['delete-group-modal__description']}">
+        Вы уверены, что хотите удалить эту группу? Это приведет к удалению всех контактов, находящихся в этой группе.
+      </p>
+      <div class="${styles['delete-group-modal__actions']}">
+        <button
+          type="button"
+          class="${styles['delete-group-modal__action-button']} ${styles['delete-group-modal__action-button--primary']}"
+          data-role="confirm"
+        >
+          Подтвердить
+        </button>
+        <button
+          type="button"
+          class="${styles['delete-group-modal__action-button']}"
+          data-role="cancel"
+        >
+          Отменить
+        </button>
       </div>
-    </section>
+    </div>
   `
 
-  const backdrop = root.querySelector<HTMLElement>(
-    `.${styles['delete-group-modal-root__backdrop']}`,
-  )
-  const closeButton = root.querySelector<HTMLButtonElement>(
+  const closeButton = overlay.panel.querySelector<HTMLButtonElement>(
     `.${styles['delete-group-modal__close-button']}`,
   )
-  const cancelButton = root.querySelector<HTMLButtonElement>('[data-role="cancel"]')
-  const confirmButton = root.querySelector<HTMLButtonElement>('[data-role="confirm"]')
-  const title = root.querySelector<HTMLElement>(
-    `.${styles['delete-group-modal__title']}`,
-  )
+  const cancelButton = overlay.panel.querySelector<HTMLButtonElement>('[data-role="cancel"]')
+  const confirmButton = overlay.panel.querySelector<HTMLButtonElement>('[data-role="confirm"]')
   let selectedGroup: Group | null = null
 
   const close = (): void => {
-    selectedGroup = null
-    root.classList.remove(styles['delete-group-modal-root--open'])
+    overlay.close()
   }
 
   const open = (group: Group): void => {
     selectedGroup = group
-
-    if (title) {
-      title.textContent = `Удалить группу${group.name ? ` «${group.name}»` : ''}?`
-    }
-
-    root.classList.add(styles['delete-group-modal-root--open'])
+    overlay.open()
   }
 
-  const isOpen = (): boolean =>
-    root.classList.contains(styles['delete-group-modal-root--open'])
+  overlay.onClose = () => {
+    selectedGroup = null
+  }
 
-  backdrop?.addEventListener('click', close)
   closeButton?.addEventListener('click', close)
   cancelButton?.addEventListener('click', close)
   confirmButton?.addEventListener('click', () => {
@@ -100,8 +88,8 @@ export function createDeleteGroupModal({
 
   return {
     close,
-    element: root,
-    isOpen,
+    element: overlay.element,
+    isOpen: () => overlay.isOpen(),
     open,
   }
 }

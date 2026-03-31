@@ -1,5 +1,5 @@
+import { OverlayController } from '@/components/overlay-controller'
 import type { Group } from '@/entities/group'
-import { createElement } from '@/utils/create-element'
 import closeIcon from '@/assets/close-popover-icon.svg'
 import deleteIcon from '@/assets/delete-icon.svg'
 import styles from './groups-popover.module.scss'
@@ -24,60 +24,57 @@ export function createGroupsPopover({
   groups = [],
   onDeleteGroupClick,
 }: CreateGroupsPopoverOptions = {}): GroupsPopoverApi {
-  const root = createElement('div', {
-    className: styles['groups-popover-root'],
+  const overlay = new OverlayController({
+    backdropClassName: styles['groups-popover-root__backdrop'],
+    openClassName: styles['groups-popover-root--open'],
+    panelClassName: styles['groups-popover'],
+    rootClassName: styles['groups-popover-root'],
   })
 
-  root.innerHTML = `
-    <div class="${styles['groups-popover-root__backdrop']}"></div>
-    <section class="${styles['groups-popover']}">
-      <div class="${styles['groups-popover__header']}">
-        <h2 class="${styles['groups-popover__title']}">Группы контактов</h2>
-        <button
-          type="button"
-          class="${styles['groups-popover__close-button']}"
-          aria-label="Закрыть поповер групп"
+  overlay.panel.innerHTML = `
+    <div class="${styles['groups-popover__header']}">
+      <h2 class="${styles['groups-popover__title']}">Группы контактов</h2>
+      <button
+        type="button"
+        class="${styles['groups-popover__close-button']}"
+        aria-label="Закрыть поповер групп"
+      >
+        <img
+          class="${styles['groups-popover__close-icon']}"
+          src="${closeIcon}"
+          alt=""
         >
-          <img
-            class="${styles['groups-popover__close-icon']}"
-            src="${closeIcon}"
-            alt=""
-          >
-        </button>
-      </div>
-      <div class="${styles['groups-popover__content']}">
-        <ul class="${styles['groups-popover__groups-list']}"></ul>
-      </div>
-      <div class="${styles['groups-popover__actions']}">
-        <button
-          type="button"
-          class="${styles['groups-popover__action-button']}"
-        >
-          Добавить
-        </button>
-        <button
-          type="button"
-          class="${styles['groups-popover__action-button']} ${styles['groups-popover__action-button--primary']}"
-        >
-          Сохранить
-        </button>
-      </div>
-    </section>
+      </button>
+    </div>
+    <div class="${styles['groups-popover__content']}">
+      <ul class="${styles['groups-popover__groups-list']}"></ul>
+    </div>
+    <div class="${styles['groups-popover__actions']}">
+      <button
+        type="button"
+        class="${styles['groups-popover__action-button']}"
+      >
+        Добавить
+      </button>
+      <button
+        type="button"
+        class="${styles['groups-popover__action-button']} ${styles['groups-popover__action-button--primary']}"
+      >
+        Сохранить
+      </button>
+    </div>
   `
 
-  const backdrop = root.querySelector<HTMLElement>(
-    `.${styles['groups-popover-root__backdrop']}`,
-  )
-  const closeButton = root.querySelector<HTMLButtonElement>(
+  const closeButton = overlay.panel.querySelector<HTMLButtonElement>(
     `.${styles['groups-popover__close-button']}`,
   )
-  const saveButton = root.querySelector<HTMLButtonElement>(
-  `.${styles['groups-popover__action-button--primary']}`,
-  );
-  const addButton = root.querySelector<HTMLButtonElement>(
+  const saveButton = overlay.panel.querySelector<HTMLButtonElement>(
+    `.${styles['groups-popover__action-button--primary']}`,
+  )
+  const addButton = overlay.panel.querySelector<HTMLButtonElement>(
     `.${styles['groups-popover__action-button']}`,
   )
-  const groupsList = root.querySelector<HTMLUListElement>(
+  const groupsList = overlay.panel.querySelector<HTMLUListElement>(
     `.${styles['groups-popover__groups-list']}`,
   )
 
@@ -117,29 +114,13 @@ export function createGroupsPopover({
       .join('')
   }
 
-  const open = (): void => {
-    root.classList.add(styles['groups-popover-root--open'])
-  }
-
-  const close = (): void => {
-    root.classList.remove(styles['groups-popover-root--open'])
-  }
-
-  const toggle = (): void => {
-    root.classList.toggle(styles['groups-popover-root--open'])
-  }
-
-  const isOpen = (): boolean =>
-    root.classList.contains(styles['groups-popover-root--open'])
-
-  closeButton?.addEventListener('click', close)
-  backdrop?.addEventListener('click', close)
+  closeButton?.addEventListener('click', () => overlay.close())
   addButton?.addEventListener('click', () => {
     onAddGroupClick?.()
   })
   saveButton?.addEventListener('click', () => {
-    close();
-  });
+    overlay.close()
+  })
   groupsList?.addEventListener('click', (event) => {
     const target = event.target
 
@@ -162,21 +143,21 @@ export function createGroupsPopover({
       return
     }
 
-    close()
+    overlay.close()
     onDeleteGroupClick?.(selectedGroup)
   })
 
   renderList(groups)
 
   return {
-    close,
-    element: root,
-    isOpen,
-    open,
+    close: () => overlay.close(),
+    element: overlay.element,
+    isOpen: () => overlay.isOpen(),
+    open: () => overlay.open(),
     render: (nextGroups) => {
       groups = nextGroups
       renderList(groups)
     },
-    toggle,
+    toggle: () => overlay.toggle(),
   }
 }

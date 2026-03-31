@@ -2,15 +2,16 @@ import {
   createContactFormPopover,
   type ContactFormPopoverPayload,
 } from '@/components/add-contact-popover'
+import { createAddGroupModal } from '@/components/add-group-modal'
 import { createButton } from '@/components/button'
 import { createDeleteGroupModal } from '@/components/delete-group-modal'
 import { createGroupsPopover } from '@/components/groups-popover'
 import { createLabel } from '@/components/label'
 import type { Group } from '@/entities/group'
 import { createElement } from '@/utils/create-element'
+import contactIcon from '@/assets/add-contact.svg'
 import styles from './header.module.scss'
 import { createImage } from '../image'
-import contactIcon from '@/assets/add-contact.svg'
 
 type CreateHeaderOptions = {
   groups: Group[]
@@ -41,10 +42,10 @@ export function createHeader({
   })
   const addContactIcon = createImage({
     alt: 'add-contant-icon',
-    src: contactIcon
-  });
+    src: contactIcon,
+  })
 
-  addContactButton.append(addContactIcon);
+  addContactButton.append(addContactIcon)
 
   const groupsControl = createElement('div', {
     className: styles['header__groups-control'],
@@ -55,6 +56,9 @@ export function createHeader({
     title: 'Добавление контакта',
     onSubmit: (payload) => onAddContact?.(payload),
   })
+  const addGroupModal = createAddGroupModal({
+    onSubmit: (groupName) => onAddGroup?.(groupName),
+  })
   const deleteGroupModal = createDeleteGroupModal({
     onConfirm: (group) => {
       onDeleteGroup?.(group.id)
@@ -63,13 +67,7 @@ export function createHeader({
   const groupsPopover = createGroupsPopover({
     groups,
     onAddGroupClick: () => {
-      const groupName = window.prompt('Введите название группы')
-
-      if (!groupName?.trim()) {
-        return
-      }
-
-      onAddGroup?.(groupName)
+      addGroupModal.open()
     },
     onDeleteGroupClick: (group) => {
       deleteGroupModal.open(group)
@@ -97,6 +95,9 @@ export function createHeader({
   addContactPopover.element.addEventListener('click', (event) => {
     event.stopPropagation()
   })
+  addGroupModal.element.addEventListener('click', (event) => {
+    event.stopPropagation()
+  })
   groupsPopover.element.addEventListener('click', (event) => {
     event.stopPropagation()
   })
@@ -114,13 +115,21 @@ export function createHeader({
       deleteGroupModal.close()
     }
 
+    if (event.key === 'Escape' && addGroupModal.isOpen()) {
+      addGroupModal.close()
+    }
+
     if (event.key === 'Escape' && addContactPopover.isOpen()) {
       addContactPopover.close()
     }
   })
 
   groupsControl.append(groupsButton, groupsPopover.element)
-  header.append(addContactPopover.element, deleteGroupModal.element)
+  header.append(
+    addContactPopover.element,
+    addGroupModal.element,
+    deleteGroupModal.element,
+  )
   container.append(label, addContactButton, groupsControl)
   header.append(container)
 

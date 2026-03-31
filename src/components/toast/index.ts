@@ -14,6 +14,9 @@ export function createToast(): ToastApi {
     className: styles['toast-root'],
   })
 
+  const TOAST_LIFETIME_MS = 3000
+  const TOAST_EXIT_DURATION_MS = 220
+
   const show = (
     message: string,
     variant: ToastVariant = 'error',
@@ -41,8 +44,12 @@ export function createToast(): ToastApi {
     root.append(toast)
 
     window.setTimeout(() => {
+      toast.classList.add(styles['toast--leaving'])
+    }, TOAST_LIFETIME_MS - TOAST_EXIT_DURATION_MS)
+
+    window.setTimeout(() => {
       toast.remove()
-    }, 3000)
+    }, TOAST_LIFETIME_MS)
   }
 
   return {

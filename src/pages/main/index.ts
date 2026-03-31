@@ -114,6 +114,7 @@ export function createMainPage(): HTMLElement {
     },
     onDeleteContactClick: (contactId) => {
       contactsService.deleteContact(contactId)
+      notifications.success('Контакт успешно удалён')
       renderContacts()
     },
   })
@@ -137,7 +138,7 @@ export function createMainPage(): HTMLElement {
       groupsService.deleteGroup(groupId)
       renderGroups()
       renderContacts()
-      notifications.success('Группа успешно удалена')
+      notifications.success('Группа и все контакты были успешно удалены')
     },
   })
 

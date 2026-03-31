@@ -1,6 +1,28 @@
 @use '@/styles/base/mixins' as mixins;
 @use '@/styles/base/variables' as variables;
 
+@keyframes groups-popover-backdrop-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes groups-popover-panel-in {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 .groups-popover-root {
   position: fixed;
   inset: 0;
@@ -16,6 +38,7 @@
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.6);
+  opacity: 0;
 }
 
 .groups-popover {
@@ -28,12 +51,42 @@
   height: 100dvh;
   padding: 23px 24px 24px;
   background: variables.$color-background-primary;
+  opacity: 0;
+  transform: translateX(24px);
+  will-change: transform, opacity;
 }
 
 @media (min-width: variables.$desktop-breakpoint) {
   .groups-popover {
     right: auto;
     left: 0;
+    transform: translateX(-24px);
+  }
+}
+
+.groups-popover-root--open .groups-popover-root__backdrop {
+  animation: groups-popover-backdrop-in 0.22s ease-out forwards;
+}
+
+.groups-popover-root--open .groups-popover {
+  animation: groups-popover-panel-in 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@media (min-width: variables.$desktop-breakpoint) {
+  .groups-popover-root--open .groups-popover {
+    animation-name: groups-popover-panel-in-left;
+  }
+}
+
+@keyframes groups-popover-panel-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 

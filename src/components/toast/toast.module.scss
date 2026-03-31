@@ -1,5 +1,29 @@
 @use '@/styles/base/variables' as variables;
 
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes toast-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+}
+
 .toast-root {
   position: fixed;
   right: 16px;
@@ -19,6 +43,13 @@
   padding: 16px;
   border-radius: 6px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  animation: toast-in 0.24s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transform-origin: bottom right;
+  will-change: transform, opacity;
+}
+
+.toast--leaving {
+  animation: toast-out 0.22s ease-in forwards;
 }
 
 .toast--error {

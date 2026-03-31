@@ -1,6 +1,40 @@
 @use '@/styles/base/mixins' as mixins;
 @use '@/styles/base/variables' as variables;
 
+@keyframes add-contact-popover-backdrop-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes add-contact-popover-panel-in {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes add-contact-popover-panel-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 .add-contact-popover-root {
   position: fixed;
   inset: 0;
@@ -16,6 +50,7 @@
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.3);
+  opacity: 0;
 }
 
 .add-contact-popover {
@@ -28,12 +63,30 @@
   min-height: 100dvh;
   padding: 24px 24px 16px;
   background: variables.$color-background-primary;
+  opacity: 0;
+  transform: translateX(24px);
+  will-change: transform, opacity;
 }
 
 @media (min-width: variables.$desktop-breakpoint) {
   .add-contact-popover {
     right: auto;
     left: 0;
+    transform: translateX(-24px);
+  }
+}
+
+.add-contact-popover-root--open .add-contact-popover-root__backdrop {
+  animation: add-contact-popover-backdrop-in 0.22s ease-out forwards;
+}
+
+.add-contact-popover-root--open .add-contact-popover {
+  animation: add-contact-popover-panel-in 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@media (min-width: variables.$desktop-breakpoint) {
+  .add-contact-popover-root--open .add-contact-popover {
+    animation-name: add-contact-popover-panel-in-left;
   }
 }
 
@@ -65,6 +118,32 @@
   background: variables.$color-background-primary;
   cursor: pointer;
   @include mixins.icon-button-hover;
+}
+
+.add-contact-popover__close-icon {
+  position: relative;
+  width: 14px;
+  height: 14px;
+}
+
+.add-contact-popover__close-icon::before,
+.add-contact-popover__close-icon::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 14px;
+  height: 2px;
+  border-radius: 999px;
+  background: variables.$color-text-muted;
+}
+
+.add-contact-popover__close-icon::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.add-contact-popover__close-icon::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
 }
 
 .add-contact-popover__form {
@@ -123,77 +202,8 @@
   color: #ea3d2f;
 }
 
-.add-contact-popover__group-trigger {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
-  
-}
-
-.add-contact-popover__group-trigger:hover {
-  background: rgba(variables.$color-black, 0.08);
-}
-
-.add-contact-popover__group-trigger-text {
-  font-weight: 400;
-  color: rgba(variables.$color-black, 0.5);
-}
-
-.add-contact-popover__group-trigger-text--selected {
-  color: variables.$color-text-primary;
-}
-
 .add-contact-popover__group-field {
   position: relative;
-}
-
-.add-contact-popover__group-field--open {
-  z-index: 1;
-}
-
-.add-contact-popover__group-field--open img {
-  transform: rotate(180deg);
-}
-
-.add-contact-popover__picker {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  width: 100%;
-}
-
-.add-contact-popover__picker-menu {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-height: 200px;
-  overflow: hidden;
-  border-radius: 6px;
-  background: #f2f2f2;
-}
-
-.add-contact-popover__group-option {
-  width: 100%;
-  min-height: 40px;
-  padding: 11px 12px;
-  border: none;
-  background: transparent;
-  font-size: variables.$font-size-text-sm;
-  line-height: variables.$line-height-text-sm;
-  font-weight: 400;
-  text-align: left;
-  color: variables.$color-text-primary;
-  cursor: pointer;
-}
-
-.add-contact-popover__group-option:hover {
-  background: #e4e3e3;
-}
-
-.add-contact-popover__group-option--active {
-  background: #e4e3e3;
 }
 
 .add-contact-popover__form-actions {
